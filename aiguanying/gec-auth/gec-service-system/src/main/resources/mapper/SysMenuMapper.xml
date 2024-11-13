@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gec.system.mapper.SysMenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.gec.model.system.SysMenu">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="TINYINT"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="component" column="component" jdbcType="VARCHAR"/>
+            <result property="perms" column="perms" jdbcType="VARCHAR"/>
+            <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="sortValue" column="sort_value" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,parent_id,name,
+        type,path,component,
+        perms,icon,sort_value,
+        status,create_time,update_time,
+        is_deleted
+    </sql>
+
+    <resultMap id="sysMenuMap" type="com.gec.model.system.SysMenu" autoMapping="true"></resultMap>
+
+    <select id="findMenuListByUserId" resultMap="sysMenuMap">
+        SELECT DISTINCT
+            m.id,m.parent_id,m.name,m.type,m.path,
+            m.component,m.perms,m.icon,m.sort_value,m.status,
+            m.create_time,m.update_time,m.is_deleted
+            FROM sys_menu m
+                 INNER JOIN sys_role_menu rm ON m.id=rm.menu_id
+                 INNER JOIN sys_user_role ur ON rm.role_id=ur.role_id
+            WHERE ur.user_id=#{userId}
+          AND m.status = 1
+          AND rm.is_deleted = 0
+          AND ur.is_deleted = 0
+          AND m.is_deleted = 0
+    </select>
+</mapper>

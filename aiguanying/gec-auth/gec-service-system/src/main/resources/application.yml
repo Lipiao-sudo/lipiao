@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: service-system
+  profiles:
+    active: dev
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
